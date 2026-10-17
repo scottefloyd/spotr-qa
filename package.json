@@ -6,6 +6,7 @@
   "scripts": {
     "test": "playwright test",
     "test:api": "playwright test --project=api",
+    "test:integration": "playwright test --project=integration",
     "test:smoke": "playwright test --grep @smoke",
     "test:headed": "playwright test --headed",
     "test:debug": "playwright test --debug",

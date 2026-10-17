@@ -21,6 +21,11 @@ export default defineConfig({
   projects: [
     { name: 'api', testMatch: /api\/.*\.spec\.ts/ },
     {
+      name: 'integration',
+      testMatch: /integration\/.*\.spec\.ts/,
+      use: { ...devices['Desktop Chrome'] }
+    },
+    {
       name: 'chromium',
       testMatch: /e2e\/.*\.spec\.ts/,
       use: { ...devices['Desktop Chrome'] }
