@@ -6,7 +6,7 @@ An independently maintained QA automation portfolio for [Spotr](https://www.rive
 
 Phase 1 provides a production-safe smoke suite. It performs read-only checks only: no accounts are created, no forms are submitted, and no production records are modified. Full end-to-end and destructive coverage will require an isolated staging environment and test data.
 
-The first smoke test verifies both the homepage document response and a user-visible heading. It runs against Chromium, Firefox, and WebKit.
+The smoke suite verifies the homepage in Chromium, Firefox, and WebKit. A separate API project validates the production-safe public river collection, detail, and not-found contracts once per run.
 
 ## Project structure
 
@@ -50,6 +50,7 @@ The default is the working production host, `https://www.riverspotr.com`. Produc
 | Command | Purpose |
 | --- | --- |
 | `npm test` | Run the complete suite |
+| `npm run test:api` | Run the API project |
 | `npm run test:smoke` | Run tests tagged `@smoke` |
 | `npm run test:headed` | Run with visible browsers |
 | `npm run test:debug` | Open Playwright Inspector |
