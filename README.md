@@ -72,4 +72,4 @@ GitHub Actions runs the read-only smoke suite on pushes and pull requests target
 
 ## Next phase
 
-Phase 2 will inspect the application's current behavior and source, then produce a risk-based test strategy before adding feature-specific automation.
+Phase 2 discovery is documented in the [application inventory](docs/application-inventory.md), [risk-based test strategy](docs/test-strategy.md), and [prioritized test cases](docs/test-cases.md). The next automation milestone is production-safe API contract coverage for the public rivers endpoint.
