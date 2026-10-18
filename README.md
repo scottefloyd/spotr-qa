@@ -18,6 +18,7 @@ pages/               Page objects for repeated workflows
 tests/api/           REST API tests
 tests/e2e/           Browser journeys and smoke tests
 tests/integration/   Cross-component tests
+tests/staging/       Credentialed tests enabled only for staging runs
 utils/               Shared test utilities
 ```
 
@@ -40,10 +41,12 @@ npm run test:smoke
 `BASE_URL` controls the target environment without changing test code:
 
 ```bash
-BASE_URL=https://staging.example.com npm run test:smoke
+TEST_ENV=staging BASE_URL=https://staging.example.com npm run test:smoke
 ```
 
-The default is the working production host, `https://www.riverspotr.com`. Production execution must remain read-only. The advertised apex host was unreachable during initial verification; details are recorded in [the defect report](docs/bug-reports/production-apex-domain-timeout.md).
+Credentialed staging tests also require `E2E_USER_EMAIL` and `E2E_USER_PASSWORD`. Store them only in the ignored local `.env` file or GitHub environment secrets. The staging Playwright project is omitted entirely from production runs.
+
+The default is the working production host, `https://www.riverspotr.com`. Production execution must remain read-only. Staging runs require an explicit non-production URL, and state-changing tests must use the guarded staging fixture. See the [staging setup guide](docs/staging-setup.md). The advertised apex host was unreachable during initial verification; details are recorded in [the defect report](docs/bug-reports/production-apex-domain-timeout.md).
 
 ## Useful commands
 
@@ -62,7 +65,7 @@ On failure, Playwright retains a screenshot and video. A trace is captured on th
 
 ## Continuous integration
 
-GitHub Actions runs the read-only smoke suite on pushes and pull requests targeting `main`. It installs all Playwright browsers and uploads the HTML report for 14 days. CI status is not claimed until the workflow has run successfully in GitHub.
+GitHub Actions runs the read-only smoke suite on pushes and pull requests targeting `main`. A separate staging workflow can be run manually and runs daily against the isolated Render, Neon, and Supabase environment using credentials from the GitHub `staging` environment. Both workflows upload their HTML reports for 14 days.
 
 ## Testing principles
 

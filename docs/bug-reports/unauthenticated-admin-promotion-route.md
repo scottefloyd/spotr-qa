@@ -2,7 +2,7 @@
 
 ## Status
 
-Source-review finding. Dynamic reproduction was intentionally not attempted against production because the operation changes privileges and data.
+Resolved on October 18, 2026. Dynamic exploitation was never attempted against production because the operation changes privileges and data.
 
 ## Severity
 
@@ -43,3 +43,14 @@ If the reviewed route is deployed and reachable, an unauthenticated caller who k
 ## Verification plan
 
 In staging, confirm anonymous and non-admin requests receive `401` or `403`, no role changes occur, an authorized admin can perform the intended operation, and an audit record identifies the requester and target user.
+
+## Resolution and verification
+
+- Application pull request: [scottefloyd/spotr#19](https://github.com/scottefloyd/spotr/pull/19)
+- Merge commit: `968a83b9e330fc177824956fb1737f7f588a039d`
+- Removed the unauthenticated admin-promotion route and its direct promotion helper.
+- Removed temporary public authentication, authorization-header, email-health, and email-test diagnostic routes.
+- Production deployment completed successfully.
+- The production-safe smoke, API, and integration suite passed: 7 tests across the API, integration, Chromium, Firefox, and WebKit projects.
+- Read-only production checks confirmed the removed paths now resolve to the generic HTML application fallback instead of their former JSON handlers.
+- No privilege-changing request was sent during verification.

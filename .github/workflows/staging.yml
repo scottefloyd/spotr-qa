@@ -1,0 +1,52 @@
+name: Playwright staging tests
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 12 * * *" # Daily at 8:00 AM Detroit time during daylight saving time
+
+permissions:
+  contents: read
+
+jobs:
+  staging:
+    name: Staging authenticated tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: staging
+
+    env:
+      TEST_ENV: staging
+      BASE_URL: https://spotr-staging.onrender.com
+      E2E_USER_EMAIL: ${{ secrets.E2E_USER_EMAIL }}
+      E2E_USER_PASSWORD: ${{ secrets.E2E_USER_PASSWORD }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Wake staging service
+        run: curl --fail --retry 12 --retry-delay 10 --retry-all-errors "$BASE_URL/api/rivers"
+
+      - name: Run staging tests
+        run: npm test
+
+      - name: Upload Playwright report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: staging-playwright-report
+          path: playwright-report/
+          retention-days: 14

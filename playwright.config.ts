@@ -1,7 +1,8 @@
 import 'dotenv/config';
 import { defineConfig, devices } from '@playwright/test';
+import { loadEnvironment } from './utils/environment';
 
-const baseURL = process.env.BASE_URL ?? 'https://www.riverspotr.com';
+const environment = loadEnvironment();
 
 export default defineConfig({
   testDir: './tests',
@@ -13,7 +14,7 @@ export default defineConfig({
     ? [['line'], ['html', { open: 'never' }]]
     : [['list'], ['html', { open: 'never' }]],
   use: {
-    baseURL,
+    baseURL: environment.baseURL,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure'
@@ -39,6 +40,15 @@ export default defineConfig({
       name: 'webkit',
       testMatch: /e2e\/.*\.spec\.ts/,
       use: { ...devices['Desktop Safari'] }
-    }
+    },
+    ...(environment.name === 'staging'
+      ? [
+          {
+            name: 'staging',
+            testMatch: /staging\/.*\.spec\.ts/,
+            use: { ...devices['Desktop Chrome'] }
+          }
+        ]
+      : [])
   ]
 });
