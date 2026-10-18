@@ -38,13 +38,17 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Wake staging service
-        run: curl --fail --retry 12 --retry-delay 10 --retry-all-errors "$BASE_URL/api/rivers"
+        run: >-
+          curl --fail --silent --show-error
+          --output /dev/null
+          --retry 12 --retry-delay 10 --retry-all-errors
+          "$BASE_URL/api/rivers"
 
       - name: Run staging tests
-        run: npm test
+        run: npx playwright test --retries=0 --trace=off
 
-      - name: Upload Playwright report
-        if: ${{ !cancelled() }}
+      - name: Upload successful Playwright report
+        if: ${{ success() }}
         uses: actions/upload-artifact@v7
         with:
           name: staging-playwright-report
