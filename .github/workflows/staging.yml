@@ -8,6 +8,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
 jobs:
   staging:
     name: Staging authenticated tests
@@ -54,3 +58,26 @@ jobs:
           name: staging-playwright-report
           path: playwright-report/
           retention-days: 14
+
+      - name: Upload report for GitHub Pages
+        if: ${{ success() }}
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: playwright-report/
+
+  deploy-report:
+    name: Publish Playwright report
+    needs: staging
+    if: ${{ needs.staging.result == 'success' }}
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy report to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
