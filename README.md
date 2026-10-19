@@ -1,5 +1,10 @@
 # Spotr QA Automation
 
+[![Production smoke tests](https://github.com/scottefloyd/spotr-qa/actions/workflows/playwright.yml/badge.svg)](https://github.com/scottefloyd/spotr-qa/actions/workflows/playwright.yml)
+[![Staging authenticated tests](https://github.com/scottefloyd/spotr-qa/actions/workflows/staging.yml/badge.svg)](https://github.com/scottefloyd/spotr-qa/actions/workflows/staging.yml)
+
+[View the latest successful Playwright report](https://scottefloyd.github.io/spotr-qa/)
+
 An independently maintained QA automation portfolio for [Spotr](https://www.riverspotr.com), a marketplace connecting paddlers with shuttle drivers. The project uses Playwright and TypeScript to demonstrate maintainable browser, API, and integration testing practices.
 
 ## Current scope
