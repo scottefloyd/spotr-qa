@@ -15,7 +15,7 @@ concurrency:
 jobs:
   staging:
     name: Staging authenticated tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     environment: staging
 
@@ -51,12 +51,13 @@ jobs:
       - name: Run staging tests
         run: npx playwright test --retries=0 --trace=off
 
-      - name: Upload successful Playwright report
-        if: ${{ success() }}
+      - name: Upload Playwright report
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v7
         with:
           name: staging-playwright-report
           path: playwright-report/
+          if-no-files-found: ignore
           retention-days: 14
 
       - name: Upload report for GitHub Pages
